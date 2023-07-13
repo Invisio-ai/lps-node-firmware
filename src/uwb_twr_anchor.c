@@ -164,7 +164,7 @@ static void logRadioData(
 
   // Print data to console
   printf(
-    "%lu,%lu,%lu,%lu,%lu,%lu,%.2f,%.2f,%.2f,%u\n",
+    "%llu,%llu,%llu,%llu,%llu,%llu,%.2f,%.2f,%.2f,%u\n",
     poll_tx,
     poll_rx,
     answer_tx,
