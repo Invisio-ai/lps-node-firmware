@@ -216,7 +216,7 @@ static void logRadioData(uint8_t slot, uint32_t rxTimestamp, uint32_t txTimestam
     rxTimestamp,
     txTimestamp,
     distance
-  )
+  );
 
   // Print the data to the console
   printf(
@@ -225,7 +225,7 @@ static void logRadioData(uint8_t slot, uint32_t rxTimestamp, uint32_t txTimestam
     rxTimestamp,
     txTimestamp,
     distance
-  )
+  );
 
   // Close the file
   fclose(f);
@@ -258,7 +258,7 @@ static void handleRxPacket(dwDevice_t *dev)
                     remoteTx, remoteRx, rxTime.low32);
 
   // Log the radio data
-  logRadioData(ctx.slot, rxTime.low32, ctx.txTimestamps[ctx.slot], ctx.distances[slot]);
+  logRadioData(ctx.slot, rxTime.low32, ctx.txTimestamps[ctx.slot], ctx.distances[ctx.slot]);
 
   ctx.packetIds[ctx.slot] = rangePacket->pid[ctx.slot];
   ctx.rxTimestamps[ctx.slot] = rxTime.low32;
