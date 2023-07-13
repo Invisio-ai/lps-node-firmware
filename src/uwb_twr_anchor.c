@@ -160,7 +160,7 @@ static void logRadioData(
     temperature,
     asl,
     pressure_ok
-  )
+  );
 
   // Print data to console
   printf(
@@ -175,7 +175,7 @@ static void logRadioData(
     temperature,
     asl,
     pressure_ok
-  )
+  );
 
   // Close the log file
   fclose(f);
