@@ -125,6 +125,47 @@ static void txcallback(dwDevice_t *dev)
 #define LPP_TYPE 3
 #define LPP_PAYLOAD 4
 
+static void logRadioData(
+  uint64_t poll_tx,
+  uint64_t poll_rx,
+  uint64_t answer_tx,
+  uint64_t answer_rx,
+  uint64_t final_tx,
+  uint64_t final_rx,
+  float pressure,
+  float temperature,
+  float asl,
+  uint8_t pressure_ok
+) {
+  // Open Log File
+  FILE *f = fopen("radio_data_twr_anchor.csv", "a");
+
+  // Exit out of the function if there is an issue opening the log file
+  if (f == NULL) {
+    printf("Error opening file!\n");
+    return;
+  }
+
+  // Write data to log file
+  fprintf(
+    f,
+    "%lu,%lu,%lu,%lu,%lu,%lu,%.2f,%.2f,%.2f,%u\n",
+    poll_tx,
+    poll_rx,
+    answer_tx,
+    answer_rx,
+    final_tx,
+    final_rx,
+    pressure,
+    temperature,
+    asl,
+    pressure_ok
+  )
+
+  // Close the log file
+  fclose(f);
+}
+
 static void rxcallback(dwDevice_t *dev) {
   dwTime_t arival = { .full=0 };
   int dataLength = dwGetDataLength(dev);
@@ -203,6 +244,20 @@ static void rxcallback(dwDevice_t *dev) {
         report->temperature = temperature;
         report->asl = asl;
         report->pressure_ok = pressure_ok;
+
+        // Log the radio data
+        logMetricsToCSV(
+          poll_tx.full,
+          poll_rx.full,
+          answer_tx.full,
+          answer_rx.full,
+          final_tx.full,
+          final_rx.full,
+          pressure,
+          temperature,
+          asl,
+          pressure_ok
+        );
 
         dwNewTransmit(dev);
         dwSetDefaults(dev);
