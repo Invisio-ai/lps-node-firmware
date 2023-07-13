@@ -113,6 +113,23 @@ static void txcallback(dwDevice_t *dev)
 #define TYPE 0
 #define SEQ 1
 
+static void logRadioData(float distance, uint64_t pollTx, uint64_t pollRx, uint64_t answerTx, uint64_t answerRx, uint64_t finalTx, uint64_t finalRx) {
+  // Create a log file
+  FILE *f = fopen("radio_log_twr_tag.csv", "a");
+
+  // Ensure that the file can be opened
+  if (f == NULL) {
+    printf("Error opening file!\n");
+    return;
+  }
+
+  // Write the data to the file
+  fprintf(f, "%f,%llu,%llu,%llu,%llu,%llu,%llu\n", distance, pollTx, pollRx, answerTx, answerRx, finalTx, finalRx);
+
+  // Close the file
+  fclose(f);
+}
+
 static void rxcallback(dwDevice_t *dev) {
   dwTime_t arival = { .full=0 };
   int dataLength = dwGetDataLength(dev);
@@ -203,6 +220,9 @@ static void rxcallback(dwDevice_t *dev) {
       dwGetReceiveTimestamp(dev, &arival);
       arival.full -= (ANTENNA_DELAY/2);
       printf("Total in-air time (ctn): 0x%08x\r\n", (unsigned int)(arival.low32-poll_tx.low32));
+
+      // Log the radio data to CSV file
+      logRadioData(distance, poll_tx.full, poll_rx.full, answer_tx.full, answer_rx.full, final_tx.full, final_rx.full);
 
       break;
     }
