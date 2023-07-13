@@ -453,6 +453,31 @@ static bool updateClockCorrection(anchorContext_t* anchorCtx, double clockCorrec
   return sampleIsAccepted;
 }
 
+static void logRadioData(uint8_t anchorID, uint8_t sequenceNumber, uint32_t txTimestamp, uint32_t rxTimestamp, uint16_t distance) {
+  // Open the log file in append mode
+  FILE *f = fopen("radio_data_tdoa3.csv", "a");
+
+  // Exit the function if the file cannot be opened
+  if (f == NULL) {
+    printf("Error opening file!\n");
+    return;
+  }
+
+  // Write the radio data to the log file
+  fprintf(
+    f,
+    "%d, %d, %u, %u, %u\n",
+    anchorID,
+    sequenceNumber,
+    txTimestamp,
+    rxTimestamp,
+    distance
+  )
+
+  // Close the log file
+  fclose(f);
+}
+
 static void handleRangePacket(const uint32_t rxTime, const packet_t* rxPacket)
 {
   const uint8_t remoteAnchorId = rxPacket->sourceAddress[0];
@@ -478,6 +503,9 @@ static void handleRangePacket(const uint32_t rxTime, const packet_t* rxPacket)
         if (distance > MIN_TOF) {
           anchorCtx->distance = distance;
           anchorCtx->distanceUpdateTime = xTaskGetTickCount();
+
+          // Log Radio Data
+          logRadioData(anchorCtx->id, remoteTxSeqNr, remoteTx, rxTime, distance)
         }
       }
     } else {
