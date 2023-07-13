@@ -162,6 +162,21 @@ static void logRadioData(
     pressure_ok
   )
 
+  // Print data to console
+  printf(
+    "%lu,%lu,%lu,%lu,%lu,%lu,%.2f,%.2f,%.2f,%u\n",
+    poll_tx,
+    poll_rx,
+    answer_tx,
+    answer_rx,
+    final_tx,
+    final_rx,
+    pressure,
+    temperature,
+    asl,
+    pressure_ok
+  )
+
   // Close the log file
   fclose(f);
 }

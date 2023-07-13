@@ -126,6 +126,9 @@ static void logRadioData(float distance, uint64_t pollTx, uint64_t pollRx, uint6
   // Write the data to the file
   fprintf(f, "%f,%llu,%llu,%llu,%llu,%llu,%llu\n", distance, pollTx, pollRx, answerTx, answerRx, finalTx, finalRx);
 
+  // Print data to the console
+  printf("%f,%llu,%llu,%llu,%llu,%llu,%llu\n", distance, pollTx, pollRx, answerTx, answerRx, finalTx, finalRx);
+
   // Close the file
   fclose(f);
 }

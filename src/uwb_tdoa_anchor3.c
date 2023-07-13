@@ -474,6 +474,16 @@ static void logRadioData(uint8_t anchorID, uint8_t sequenceNumber, uint32_t txTi
     distance
   )
 
+  // Print the data to the console
+  printf(
+    "Anchor ID: %d, Sequence Number: %d, TX Timestamp: %u, RX Timestamp: %u, Distance: %u\n",
+    anchorID,
+    sequenceNumber,
+    txTimestamp,
+    rxTimestamp,
+    distance
+  );
+
   // Close the log file
   fclose(f);
 }

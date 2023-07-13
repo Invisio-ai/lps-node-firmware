@@ -218,6 +218,15 @@ static void logRadioData(uint8_t slot, uint32_t rxTimestamp, uint32_t txTimestam
     distance
   )
 
+  // Print the data to the console
+  printf(
+    "Slot: %d, RX Timestamp: %u, TX Timestamp: %u, Distance: %u\n",
+    slot,
+    rxTimestamp,
+    txTimestamp,
+    distance
+  )
+
   // Close the file
   fclose(f);
 }
