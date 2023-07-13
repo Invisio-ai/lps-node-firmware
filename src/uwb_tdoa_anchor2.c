@@ -198,6 +198,30 @@ static void calculateDistance(int slot, int newId, int remotePid, uint32_t remot
   }
 }
 
+static void logRadioData(uint8_t slot, uint32_t rxTimestamp, uint32_t txTimestamp, uint16_t distance) {
+  // Open the log file in append mode
+  FILE *f = fopen("radio_data_tdoa2.csv", "a");
+
+  // Exit out of the function if there is an error opening the log file
+  if (f == NULL) {
+    printf("Error opening log file\n");
+    return;
+  }
+
+  // Log the data
+  fprintf(
+    f,
+    "Slot: %d, RX Timestamp: %u, TX Timestamp: %u, Distance: %u\n",
+    slot,
+    rxTimestamp,
+    txTimestamp,
+    distance
+  )
+
+  // Close the file
+  fclose(f);
+}
+
 static void handleRxPacket(dwDevice_t *dev)
 {
   static packet_t rxPacket;
@@ -223,6 +247,9 @@ static void handleRxPacket(dwDevice_t *dev)
 
   calculateDistance(ctx.slot, rangePacket->pid[ctx.slot], rangePacket->pid[ctx.anchorId],
                     remoteTx, remoteRx, rxTime.low32);
+
+  // Log the radio data
+  logRadioData(ctx.slot, rxTime.low32, ctx.txTimestamps[ctx.slot], ctx.distances[slot]);
 
   ctx.packetIds[ctx.slot] = rangePacket->pid[ctx.slot];
   ctx.rxTimestamps[ctx.slot] = rxTime.low32;
