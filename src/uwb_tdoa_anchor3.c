@@ -472,7 +472,7 @@ static void logRadioData(uint8_t anchorID, uint8_t sequenceNumber, uint32_t txTi
     txTimestamp,
     rxTimestamp,
     distance
-  )
+  );
 
   // Print the data to the console
   printf(
@@ -515,7 +515,7 @@ static void handleRangePacket(const uint32_t rxTime, const packet_t* rxPacket)
           anchorCtx->distanceUpdateTime = xTaskGetTickCount();
 
           // Log Radio Data
-          logRadioData(anchorCtx->id, remoteTxSeqNr, remoteTx, rxTime, distance)
+          logRadioData(anchorCtx->id, remoteTxSeqNr, remoteTx, rxTime, distance);
         }
       }
     } else {
