@@ -149,7 +149,7 @@ static void logRadioData(
   // Write data to log file
   fprintf(
     f,
-    "%lu,%lu,%lu,%lu,%lu,%lu,%.2f,%.2f,%.2f,%u\n",
+    "%llu,%llu,%llu,%llu,%llu,%llu,%.2f,%.2f,%.2f,%u\n",
     poll_tx,
     poll_rx,
     answer_tx,
@@ -261,7 +261,7 @@ static void rxcallback(dwDevice_t *dev) {
         report->pressure_ok = pressure_ok;
 
         // Log the radio data
-        logMetricsToCSV(
+        logRadioData(
           poll_tx.full,
           poll_rx.full,
           answer_tx.full,
