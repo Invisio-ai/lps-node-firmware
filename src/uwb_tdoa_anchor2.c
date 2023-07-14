@@ -58,6 +58,8 @@
 #include "cfg.h"
 #include "lpp.h"
 
+#include "usbd_core.h"
+
 #define debug(...) printf(__VA_ARGS__)
 
 // Still using modulo 2 calculation for slots
@@ -200,35 +202,38 @@ static void calculateDistance(int slot, int newId, int remotePid, uint32_t remot
 
 static void logRadioData(uint8_t slot, uint32_t rxTimestamp, uint32_t txTimestamp, uint16_t distance) {
   // Open the log file in append mode
-  FILE *f = fopen("radio_data_tdoa2.csv", "a");
+  // FILE *f = fopen("radio_data_tdoa2.csv", "a");
 
   // Exit out of the function if there is an error opening the log file
-  if (f == NULL) {
-    printf("Error opening log file\n");
-    return;
-  }
+  // if (f == NULL) {
+  //   printf("Error opening log file\n");
+  //   return;
+  // }
+
+  // Write data to user log
+  USBD_UsrLog("Slot: %d, RX Timestamp: %lu, TX Timestamp: %lu, Distance: %u\n", slot, rxTimestamp, txTimestamp, distance);
 
   // Log the data
-  fprintf(
-    f,
-    "Slot: %d, RX Timestamp: %lu, TX Timestamp: %lu, Distance: %u\n",
-    slot,
-    rxTimestamp,
-    txTimestamp,
-    distance
-  );
+  // fprintf(
+  //   f,
+  //   "Slot: %d, RX Timestamp: %lu, TX Timestamp: %lu, Distance: %u\n",
+  //   slot,
+  //   rxTimestamp,
+  //   txTimestamp,
+  //   distance
+  // );
 
   // Print the data to the console
-  printf(
-    "Slot: %d, RX Timestamp: %lu, TX Timestamp: %lu, Distance: %u\n",
-    slot,
-    rxTimestamp,
-    txTimestamp,
-    distance
-  );
+  // printf(
+  //   "Slot: %d, RX Timestamp: %lu, TX Timestamp: %lu, Distance: %u\n",
+  //   slot,
+  //   rxTimestamp,
+  //   txTimestamp,
+  //   distance
+  // );
 
   // Close the file
-  fclose(f);
+  // fclose(f);
 }
 
 static void handleRxPacket(dwDevice_t *dev)

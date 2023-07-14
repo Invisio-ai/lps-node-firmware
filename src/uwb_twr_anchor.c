@@ -39,6 +39,8 @@
 #include "dwOps.h"
 #include "mac.h"
 
+#include "usbd_core.h"
+
 uint8_t base_address[] = {0,0,0,0,0,0,0xcf,0xbc};
 
 // System configuration
@@ -138,47 +140,52 @@ static void logRadioData(
   uint8_t pressure_ok
 ) {
   // Open Log File
-  FILE *f = fopen("radio_data_twr_anchor.csv", "a");
+  // FILE *f = fopen("radio_data_twr_anchor.csv", "a");
 
   // Exit out of the function if there is an issue opening the log file
-  if (f == NULL) {
-    printf("Error opening file!\n");
-    return;
-  }
+  // if (f == NULL) {
+  //   printf("Error opening file!\n");
+  //   return;
+  // }
+
+  // Write data to user log
+  USBD_UsrLog("%llu,%llu,%llu,%llu,%llu,%llu,%.2f,%.2f,%.2f,%u\n",
+           poll_tx, poll_rx, answer_tx, answer_rx, final_tx, final_rx,
+           pressure, temperature, asl, pressure_ok);
 
   // Write data to log file
-  fprintf(
-    f,
-    "%llu,%llu,%llu,%llu,%llu,%llu,%.2f,%.2f,%.2f,%u\n",
-    poll_tx,
-    poll_rx,
-    answer_tx,
-    answer_rx,
-    final_tx,
-    final_rx,
-    pressure,
-    temperature,
-    asl,
-    pressure_ok
-  );
+  // fprintf(
+  //   f,
+  //   "%llu,%llu,%llu,%llu,%llu,%llu,%.2f,%.2f,%.2f,%u\n",
+  //   poll_tx,
+  //   poll_rx,
+  //   answer_tx,
+  //   answer_rx,
+  //   final_tx,
+  //   final_rx,
+  //   pressure,
+  //   temperature,
+  //   asl,
+  //   pressure_ok
+  // );
 
   // Print data to console
-  printf(
-    "%llu,%llu,%llu,%llu,%llu,%llu,%.2f,%.2f,%.2f,%u\n",
-    poll_tx,
-    poll_rx,
-    answer_tx,
-    answer_rx,
-    final_tx,
-    final_rx,
-    pressure,
-    temperature,
-    asl,
-    pressure_ok
-  );
+  // printf(
+  //   "%llu,%llu,%llu,%llu,%llu,%llu,%.2f,%.2f,%.2f,%u\n",
+  //   poll_tx,
+  //   poll_rx,
+  //   answer_tx,
+  //   answer_rx,
+  //   final_tx,
+  //   final_rx,
+  //   pressure,
+  //   temperature,
+  //   asl,
+  //   pressure_ok
+  // );
 
   // Close the log file
-  fclose(f);
+  // fclose(f);
 }
 
 static void rxcallback(dwDevice_t *dev) {

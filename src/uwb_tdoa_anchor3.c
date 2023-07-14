@@ -57,6 +57,8 @@ The implementation must handle
 #include "cfg.h"
 #include "lpp.h"
 
+#include "usbd_core.h"
+
 #define debug(...) printf(__VA_ARGS__)
 
 // Time length of the preamble
@@ -367,7 +369,7 @@ static dwTime_t findTransmitTimeAsSoonAsPossible(dwDevice_t *dev)
 
 static double calculateClockCorrection(anchorContext_t* anchorCtx, int remoteTxSeqNr, uint32_t remoteTx, uint32_t rx)
 {
-  double result = 0.0d;
+  double result = 0.0;
 
   // Assigning to uint32_t truncates the diffs and takes care of wrapping clocks
   uint32_t tickCountRemote = remoteTx - anchorCtx->txTimeStamp;
@@ -383,7 +385,7 @@ static double calculateClockCorrection(anchorContext_t* anchorCtx, int remoteTxS
 static uint16_t calculateDistance(anchorContext_t* anchorCtx, int remoteRxSeqNr, uint32_t remoteTx, uint32_t remoteRx, uint32_t rx)
 {
   // Check that the remote received seq nr is our latest tx seq nr
-  if (remoteRxSeqNr == ctx.seqNr && anchorCtx->clockCorrection > 0.0d) {
+  if (remoteRxSeqNr == ctx.seqNr && anchorCtx->clockCorrection > 0.0) {
     uint32_t localTime = rx - ctx.txTime;
     uint32_t remoteTime = (uint32_t)((double)(remoteTx - remoteRx) * anchorCtx->clockCorrection);
     uint32_t distance = (localTime - remoteTime) / 2;
@@ -438,7 +440,7 @@ static bool updateClockCorrection(anchorContext_t* anchorCtx, double clockCorrec
 
   if (-CLOCK_CORRECTION_ACCEPTED_NOISE < diff && diff < CLOCK_CORRECTION_ACCEPTED_NOISE) {
     // LP filter
-    anchorCtx->clockCorrection = anchorCtx->clockCorrection * (1.0d - CLOCK_CORRECTION_FILTER) + clockCorrection * CLOCK_CORRECTION_FILTER;
+    anchorCtx->clockCorrection = anchorCtx->clockCorrection * (1.0 - CLOCK_CORRECTION_FILTER) + clockCorrection * CLOCK_CORRECTION_FILTER;
 
     fillClockCorrectionBucket(anchorCtx);
     sampleIsAccepted = true;
@@ -455,37 +457,40 @@ static bool updateClockCorrection(anchorContext_t* anchorCtx, double clockCorrec
 
 static void logRadioData(uint8_t anchorID, uint8_t sequenceNumber, uint32_t txTimestamp, uint32_t rxTimestamp, uint16_t distance) {
   // Open the log file in append mode
-  FILE *f = fopen("radio_data_tdoa3.csv", "a");
+  // FILE *f = fopen("radio_data_tdoa3.csv", "a");
 
   // Exit the function if the file cannot be opened
-  if (f == NULL) {
-    printf("Error opening file!\n");
-    return;
-  }
+  // if (f == NULL) {
+  //   printf("Error opening file!\n");
+  //   return;
+  // }
+
+  // Format and Log Message
+  USBD_UsrLog("Anchor ID: %d, Sequence Number: %d, TX Timestamp: %lu, RX Timestamp: %lu, Distance: %u");
 
   // Write the radio data to the log file
-  fprintf(
-    f,
-    "%d, %d, %lu, %lu, %u\n",
-    anchorID,
-    sequenceNumber,
-    txTimestamp,
-    rxTimestamp,
-    distance
-  );
+  // fprintf(
+  //   f,
+  //   "%d, %d, %lu, %lu, %u\n",
+  //   anchorID,
+  //   sequenceNumber,
+  //   txTimestamp,
+  //   rxTimestamp,
+  //   distance
+  // );
 
   // Print the data to the console
-  printf(
-    "Anchor ID: %d, Sequence Number: %d, TX Timestamp: %lu, RX Timestamp: %lu, Distance: %u\n",
-    anchorID,
-    sequenceNumber,
-    txTimestamp,
-    rxTimestamp,
-    distance
-  );
+  // printf(
+  //   "Anchor ID: %d, Sequence Number: %d, TX Timestamp: %lu, RX Timestamp: %lu, Distance: %u\n",
+  //   anchorID,
+  //   sequenceNumber,
+  //   txTimestamp,
+  //   rxTimestamp,
+  //   distance
+  // );
 
   // Close the log file
-  fclose(f);
+  // fclose(f);
 }
 
 static void handleRangePacket(const uint32_t rxTime, const packet_t* rxPacket)

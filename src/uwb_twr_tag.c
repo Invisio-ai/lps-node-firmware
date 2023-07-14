@@ -37,6 +37,8 @@
 #include "dwOps.h"
 #include "mac.h"
 
+#include "usbd_core.h"
+
 static uint8_t base_address[] = {0,0,0,0,0,0,0xcf,0xbc};
 
 // The four packets for ranging
@@ -115,22 +117,25 @@ static void txcallback(dwDevice_t *dev)
 
 static void logRadioData(float distance, uint64_t pollTx, uint64_t pollRx, uint64_t answerTx, uint64_t answerRx, uint64_t finalTx, uint64_t finalRx) {
   // Create a log file
-  FILE *f = fopen("radio_log_twr_tag.csv", "a");
+  // FILE *f = fopen("radio_log_twr_tag.csv", "a");
 
   // Ensure that the file can be opened
-  if (f == NULL) {
-    printf("Error opening file!\n");
-    return;
-  }
+  // if (f == NULL) {
+  //   printf("Error opening file!\n");
+  //   return;
+  // }
+
+  // Write the data to the user log
+  USBD_UsrLog("%f,%llu,%llu,%llu,%llu,%llu,%llu\n", distance, pollTx, pollRx, answerTx, answerRx, finalTx, finalRx);
 
   // Write the data to the file
-  fprintf(f, "%f,%llu,%llu,%llu,%llu,%llu,%llu\n", distance, pollTx, pollRx, answerTx, answerRx, finalTx, finalRx);
+  // fprintf(f, "%f,%llu,%llu,%llu,%llu,%llu,%llu\n", distance, pollTx, pollRx, answerTx, answerRx, finalTx, finalRx);
 
   // Print data to the console
-  printf("%f,%llu,%llu,%llu,%llu,%llu,%llu\n", distance, pollTx, pollRx, answerTx, answerRx, finalTx, finalRx);
+  // printf("%f,%llu,%llu,%llu,%llu,%llu,%llu\n", distance, pollTx, pollRx, answerTx, answerRx, finalTx, finalRx);
 
   // Close the file
-  fclose(f);
+  // fclose(f);
 }
 
 static void rxcallback(dwDevice_t *dev) {
