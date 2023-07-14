@@ -466,7 +466,7 @@ static void logRadioData(uint8_t anchorID, uint8_t sequenceNumber, uint32_t txTi
   // Write the radio data to the log file
   fprintf(
     f,
-    "%d, %d, %u, %u, %u\n",
+    "%d, %d, %lu, %lu, %u\n",
     anchorID,
     sequenceNumber,
     txTimestamp,
@@ -476,7 +476,7 @@ static void logRadioData(uint8_t anchorID, uint8_t sequenceNumber, uint32_t txTi
 
   // Print the data to the console
   printf(
-    "Anchor ID: %d, Sequence Number: %d, TX Timestamp: %u, RX Timestamp: %u, Distance: %u\n",
+    "Anchor ID: %d, Sequence Number: %d, TX Timestamp: %lu, RX Timestamp: %lu, Distance: %u\n",
     anchorID,
     sequenceNumber,
     txTimestamp,
