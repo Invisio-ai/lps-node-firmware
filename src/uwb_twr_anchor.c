@@ -24,10 +24,10 @@
  */
 /* uwb_twr_anchor.c: Uwb two way ranging anchor implementation */
 
-#include "uwb.h"
-
 #include <string.h>
 #include <stdio.h>
+
+#include "uwb.h"
 
 #include "cfg.h"
 #include "led.h"
